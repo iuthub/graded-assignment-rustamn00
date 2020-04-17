@@ -13,6 +13,22 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/', 'TaskController@index');
+
+Route::resource('task', 'TaskController')->except([
+    'index', 'destroy'
+])->middleware('auth');
+
+Route::get('/task/del/{id}', 'TaskController@destroy');
+
+Route::get('/', 'TaskController@index')->name('default');
+Route::resource('task', 'TaskController', [
+    'except' => ['create', 'show']
+]);
