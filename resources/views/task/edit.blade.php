@@ -4,8 +4,7 @@
     <div id="myDIV" class="header">
       @csrf
       @method('PUT')
-      <a class="btn btn-primary float-left mb-2" href="{{url()->previous()}}">Go back</a>
-      <h2>My To Do List update</h2>
+      <h2>My To Do List</h2>
       @error('title')
         <div class="alert alert-danger">{{ $note }}</div>
       @enderror

@@ -14,7 +14,7 @@ class TaskController extends Controller
     {
         if(Auth::user())
         {
-            $tasks = Task::all();
+            $tasks = Auth::user()->tasks;
             return view('welcome', ['tasks' => $tasks]);
         }
         return view('welcome');
@@ -26,11 +26,14 @@ class TaskController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'title' => ['required', new rule],
+            'title' => ['required'],
             'user_id' => 'required'
         ]);
 
-        Task::create([ 'name' => $validated->title, 'user_id'  => $validated->user_id]);
+        Task::create([
+            'name' => $request->title,
+            'user_id' => $request->user_id
+        ]);
         return redirect()->route('home')->with('letter', 'Task stored');
     }
 
@@ -38,33 +41,27 @@ class TaskController extends Controller
     
     public function edit(Task $task)
     {
-        if (\Gate::allows('edit-task', $task)) {
-            return view('task/edit', ['task' => $task]);
-        }
-        return redirect()->route('home')->with('letter', 'Wrong task');
+        
+        return view('task/edit', ['task' => $task]);
 
     }
 
-    //Update task
     public function update(Request $request, Task $task)
     {
         $validated = $request->validate([
-            'title' => ['required', new rule]
+            'title' => ['required']
         ]);
-        $task->update($validated);
+        $task->update([
+            'name' => $request->title
+        ]);
 
         return redirect()->route('home')->with('letter', 'Task updated');
     }
 
-    //Task deletion
     public function destroy($id)
     {
-        $task = Task::findOrFail($id);
-        //Checking if the task belongs to current user
-        if (!\Gate::allows('edit-task', $task))
-        {
-            return redirect()->route('home')->with('letter', 'Wrong task');
-        }
+        $task = Task::find($id);
+        
         $task->delete();
         return redirect()->route('home')->with('letter', 'Task deleted');
     }

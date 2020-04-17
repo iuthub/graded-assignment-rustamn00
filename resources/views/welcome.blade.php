@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-@if ($note = Session::get('msg'))
+@if ($note = Session::get('letter'))
 <div class="alert alert-success alert-block">
   <button type="button" class="close" data-dismiss="alert">×</button> 
   <p class="text-center"><strong>{{ $note }}</strong></p>
@@ -41,7 +41,7 @@
           <a href="/task/{{$task->id}}/edit"><i class="fa fa-edit"></i></a>
       </div>
       <div class="action">
-        <a href="/task/del/{{$task->id}}"><i class="fa fa-trash-alt"></i></a> 
+        <a href="/task/{{$task->id}}"><i class="fa fa-trash-alt"></i></a> 
       </div>
     </li>
     @endforeach
